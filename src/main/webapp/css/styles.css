@@ -1,0 +1,19 @@
+#categoryColor:hover {
+    color: #dc3545;
+}
+
+#categoryColor, #brandColor {
+    color: #2a2529;
+}
+
+.ingredientFont {
+    font-size: 5vw;
+}
+
+.second-sticky-top {
+    top: 71px;
+}
+
+.background-color {
+    background-color: #F3F3F7;
+}
