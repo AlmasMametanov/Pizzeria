@@ -10,10 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.List;
 
 import static com.epam.pizzeria.action.ActionConstants.*;
-import static com.epam.pizzeria.util.constants.PageNameConstants.*;
 import static com.epam.pizzeria.util.constants.ParameterNamesConstants.*;
 
 public class ChangeProductActiveStatusAction implements Action {

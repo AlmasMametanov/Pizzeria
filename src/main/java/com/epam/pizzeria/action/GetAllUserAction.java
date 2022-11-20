@@ -33,6 +33,5 @@ public class GetAllUserAction implements Action {
         } else {
             response.sendRedirect(PAGE_NOT_FOUND_ACTION);
         }
-
     }
 }

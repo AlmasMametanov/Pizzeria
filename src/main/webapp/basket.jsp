@@ -6,6 +6,7 @@
 <c:if test="${sessionScope.user == null}">
     <c:redirect url="pageNotFound.jsp"/>
 </c:if>
+
 <html>
     <body class="background-color">
         <jsp:include page="header.jsp"/>
@@ -26,7 +27,7 @@
                                                 <p>${basket.product.productSize.name} ${basket.product.productSize.size}</p>
                                                 <c:if test="${basket.product.basketIngredientDetailList.size() != 0}">
                                                     <div class="dropdown">
-                                                        <button type="button" data-bs-toggle="dropdown" class="btn btn-light dropdown-toggle">Доп. ингредиенты</button>
+                                                        <button type="button" data-bs-toggle="dropdown" class="btn btn-light dropdown-toggle"><fmt:message key="button.addedIngredients"/></button>
                                                         <ul class="dropdown-menu">
                                                             <c:forEach var="ingredientFromBasket" items="${basket.product.basketIngredientDetailList}">
                                                                 <li class="dropdown-item">${ingredientFromBasket.additionalIngredient.name}</li>
@@ -40,18 +41,18 @@
                                             </c:if>
                                         </div>
                                         <div class="col-2 text-center">
-                                            <p>Количество</p>
+                                            <p><fmt:message key="label.quantity"/></p>
                                             <form action="changeProductCountInBasket" method="post">
                                                 <input type="hidden" name="basketLoopIndex" value="${loop.index}">
                                                 <input type="hidden" name="basketsByUser" value="${sessionScope.basketsByUser}">
                                                 <div class="d-flex mb-3" style="max-width: 70px; margin: auto;">
                                                     <input type="number" class="form-control" min="${minProductCountInBasket}" max="${maxProductCountInBasket}" name="newProductCount" value="${basket.count}"/>
                                                 </div>
-                                                <button class="btn btn-danger" name="basketId" value="${basket.id}">Сохранить</button>
+                                                <button class="btn btn-danger" name="basketId" value="${basket.id}"><fmt:message key="button.save"/></button>
                                             </form>
                                         </div>
                                         <div class="col-2 text-center my-auto">
-                                            <h6>${basket.product.price} тенге</h6>
+                                            <h6>${basket.product.price} ₸</h6>
                                         </div>
                                         <div class="col-1 my-auto">
                                             <form action="deleteProductFromBasket" method="post">
@@ -76,16 +77,16 @@
                         <div class="sticky-top second-sticky-top" style="z-index: 3;">
                             <div class="card border-0">
                                 <div class="card-body">
-                                    <h4>Сумма заказа: ${sessionScope.totalPrice} тенге</h4>
+                                    <h4><fmt:message key="label.totalCost"/> ${sessionScope.totalPrice} ₸</h4>
                                     <form action="checkoutOrder" method="post">
                                         <c:forEach var="deliveryMethodLocale" items="${sessionScope.deliveryMethodLocaleList}">
                                             <div class="form-check">
-                                                <input class="form-check-input" id="deliveryMethodLocale" type="radio" name="deliveryMethodLocaleId" value="${deliveryMethodLocale.id}" required>
-                                                <label class="form-check-label" for="deliveryMethodLocale">${deliveryMethodLocale.name}</label>
+                                                <input class="form-check-input" id="deliveryMethodLocale + ${deliveryMethodLocale.id}" type="radio" name="deliveryMethodLocaleId" value="${deliveryMethodLocale.id}" required>
+                                                <label class="form-check-label" for="deliveryMethodLocale + ${deliveryMethodLocale.id}">${deliveryMethodLocale.name}</label>
                                             </div>
                                         </c:forEach>
                                         <div class="text-center mt-3">
-                                            <button class="btn btn-danger" type="submit">К оформлению заказа</button>
+                                            <button class="btn btn-danger" type="submit"><fmt:message key="button.checkoutOrder"/></button>
                                         </div>
                                     </form>
                                 </div>

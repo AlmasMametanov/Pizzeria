@@ -19,15 +19,12 @@ public class BasketDAOImpl implements BasketDAO {
     private final Logger logger = LogManager.getLogger(this.getClass().getName());
     private static final String INSERT_BASKET = "INSERT INTO basket (user_id, product_id, size_id) VALUES (?, ?, ?)";
     private static final String INSERT_BASKET_FOR_NOT_PIZZA = "INSERT INTO basket (user_id, product_id) VALUES (?, ?)";
-    private static final String GET_LAST_BASKET_ID_BY_USER_ID = "SELECT id FROM basket WHERE user_id = ? ORDER BY id DESC LIMIT 1";
     private static final String GET_PRODUCTS_IF_PRODUCT_IS_PIZZA = "SELECT * FROM basket WHERE user_id = ? AND product_id = ? AND size_id = ?";
     private static final String GET_PRODUCTS_IF_SIZE_IS_NULL = "SELECT * FROM basket WHERE user_id = ? AND product_id = ? AND size_id is null";
     private static final String GET_ALL_BASKETS_FROM_BY_USER_ID = "SELECT * FROM basket WHERE user_id = ?";
     private static final String INCREMENT_PRODUCT_COUNT_PER_UNIT_IN_BASKET_BY_BASKET_ID = "UPDATE basket SET count = count + 1 WHERE id = ?";
     private static final String CHANGE_PRODUCT_COUNT_IN_BASKET_BY_BASKET_ID = "UPDATE basket SET count = ? WHERE id = ?";
     private static final String DELETE_BASKET_BY_ID = "DELETE FROM basket WHERE id = ?";
-    private static final String DELETE_BASKET_BY_USER_ID = "DELETE FROM basket WHERE product_id = ? AND user_id = ?";
-    private static final String DELETE_ALL_BASKETS = "DELETE FROM basket WHERE user_id = ?";
 
     ConnectionPool connectionPool;
     Connection connection;
@@ -65,25 +62,6 @@ public class BasketDAOImpl implements BasketDAO {
         } finally {
             connectionPool.returnConnection(connection);
         }
-    }
-
-    @Override
-    public Long getLastBasketIdByUserId(Long userId) {
-        connectionPool = getInstance();
-        connection = connectionPool.getConnection();
-        Long basketId = 0L;
-        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_LAST_BASKET_ID_BY_USER_ID)) {
-            preparedStatement.setLong(1, userId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                basketId = resultSet.getLong("id");
-            }
-        } catch (SQLException e) {
-            logger.error(e.getMessage(), e);
-        } finally {
-            connectionPool.returnConnection(connection);
-        }
-        return basketId;
     }
 
     @Override
@@ -182,35 +160,6 @@ public class BasketDAOImpl implements BasketDAO {
         connection = connectionPool.getConnection();
         try (PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BASKET_BY_ID)) {
             preparedStatement.setLong(1, basketId);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            logger.error(e.getMessage(), e);
-        } finally {
-            connectionPool.returnConnection(connection);
-        }
-    }
-
-    @Override
-    public void deleteBasketByUserId(Long productId, Long userId) {
-        connectionPool = getInstance();
-        connection = connectionPool.getConnection();
-        try (PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BASKET_BY_USER_ID)) {
-            preparedStatement.setLong(1, productId);
-            preparedStatement.setLong(2, userId);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            logger.error(e.getMessage(), e);
-        } finally {
-            connectionPool.returnConnection(connection);
-        }
-    }
-
-    @Override
-    public void deleteAllBasketsByUserId(Long userId) {
-        connectionPool = getInstance();
-        connection = connectionPool.getConnection();
-        try (PreparedStatement preparedStatement = connection.prepareStatement(DELETE_ALL_BASKETS)) {
-            preparedStatement.setLong(1, userId);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);

@@ -18,11 +18,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
-import static com.epam.pizzeria.action.ActionConstants.GET_ALL_PRODUCT_ACTION;
-import static com.epam.pizzeria.action.ActionConstants.PAGE_NOT_FOUND_ACTION;
-import static com.epam.pizzeria.util.constants.ParameterNamesConstants.USER;
+import static com.epam.pizzeria.action.ActionConstants.*;
+import static com.epam.pizzeria.util.constants.ParameterNamesConstants.*;
 
 public class ChangeProductAction implements Action {
     private AdditionalIngredientDAO additionalIngredientDAO = new AdditionalIngredientDAOImpl();
@@ -36,17 +34,17 @@ public class ChangeProductAction implements Action {
         HttpSession httpSession = request.getSession(true);
         User user = (User) httpSession.getAttribute(USER);
         if (user != null && user.getIsAdmin()) {
-            Long productId = Long.parseLong(request.getParameter("productId"));
+            Long productId = Long.parseLong(request.getParameter(PRODUCT_ID));
             Product product = productDAO.getProductById(productId);
-            product.setName(request.getParameter("productName"));
+            product.setName(request.getParameter(PRODUCT_NAME));
             if (product.getIsPizza()) {
                 checkIngredientsForChanges(request, product);
                 updateProductSizePrice(request);
             } else {
                 changesIfProductIsNotPizza(request, product);
             }
-            if (request.getParameter("imageUrl") != "")
-                product.setImageUrl(request.getParameter("imageUrl"));
+            if (request.getParameter(IMAGE_URL) != "")
+                product.setImageUrl(request.getParameter(IMAGE_URL));
             productDAO.updateProduct(product);
             actionFactory.getAction(GET_ALL_PRODUCT_ACTION).execute(request, response);
         } else {
@@ -55,24 +53,24 @@ public class ChangeProductAction implements Action {
     }
 
     private void changesIfProductIsNotPizza(HttpServletRequest request, Product product) {
-        String description = request.getParameter("description");
-        Integer price = Integer.parseInt(request.getParameter("price"));
+        String description = request.getParameter(PRODUCT_DESCRIPTION);
+        Integer price = Integer.parseInt(request.getParameter(PRICE));
         product.setDescription(description);
         product.setPrice(price);
     }
 
     private void updateProductSizePrice(HttpServletRequest request) {
-        List<String> productSizePriceList = Arrays.asList(request.getParameterValues("productSizeDetailPrice"));
-        List<String> productSizeDetailIdList = Arrays.asList(request.getParameterValues("productSizeDetailId"));
+        List<String> productSizePriceList = Arrays.asList(request.getParameterValues(PRODUCT_SIZE_DETAIL_PRICE));
+        List<String> productSizeDetailIdList = Arrays.asList(request.getParameterValues(PRODUCT_SIZE_DETAIL_ID));
         for (int i = 0; i < productSizeDetailIdList.size(); i++) {
             productSizeDetailDAO.updatePriceById(Long.parseLong(productSizeDetailIdList.get(i)), Integer.parseInt(productSizePriceList.get(i)));
         }
     }
 
     private void checkIngredientsForChanges(HttpServletRequest request, Product product) {
-        if (request.getParameter("selectedIngredientId") != null) {
-            List<String> oldProductIngredientIdList = new ArrayList<>(Arrays.asList(request.getParameterValues("productIngredientIdList")));
-            List<String> newIngredientsIdForPizza = new ArrayList<>(Arrays.asList(request.getParameterValues("selectedIngredientId")));
+        if (request.getParameter(SELECTED_INGREDIENT_ID) != null) {
+            List<String> oldProductIngredientIdList = new ArrayList<>(Arrays.asList(request.getParameterValues(PRODUCT_INGREDIENT_ID_LIST)));
+            List<String> newIngredientsIdForPizza = new ArrayList<>(Arrays.asList(request.getParameterValues(SELECTED_INGREDIENT_ID)));
             Collections.sort(oldProductIngredientIdList);
             Collections.sort(newIngredientsIdForPizza);
             if (!oldProductIngredientIdList.equals(newIngredientsIdForPizza)) {

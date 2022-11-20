@@ -19,7 +19,6 @@ public class ProductCategoryLocaleDAOImpl implements ProductCategoryLocaleDAO {
     private static final String INSERT_PRODUCT_CATEGORY_LOCALE = "INSERT INTO product_category_locale (product_category_id, locale_id, name) " +
             "VALUES (?, ?, ?)";
     private static final String GET_ALL_PRODUCT_CATEGORY_BY_LOCALE_ID = "SELECT * FROM product_category_locale WHERE locale_id = ?";
-    private static final String GET_PRODUCT_CATEGORY_NAME = "SELECT name FROM product_category_locale WHERE id = ? AND locale_id = ?";
     private static final String REMOVE_PRODUCT_CATEGORY_LOCALE = "DELETE FROM product_category_locale WHERE product_category_id = ?";
 
     ConnectionPool connectionPool;
@@ -60,27 +59,6 @@ public class ProductCategoryLocaleDAOImpl implements ProductCategoryLocaleDAO {
         }
         return productCategoryLocaleList;
     }
-
-    @Override
-    public String getProductCategoryName(Long productCategoryId, Long localeId) {
-        connectionPool = getInstance();
-        connection = connectionPool.getConnection();
-        String productCategoryName = null;
-        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_PRODUCT_CATEGORY_NAME)) {
-            preparedStatement.setLong(1, productCategoryId);
-            preparedStatement.setLong(2, localeId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while(resultSet.next()) {
-                productCategoryName = resultSet.getString("name");
-            }
-        } catch (SQLException e) {
-            logger.error(e.getMessage(), e);
-        } finally {
-            connectionPool.returnConnection(connection);
-        }
-        return productCategoryName;
-    }
-
 
     @Override
     public void removeProductCategoryLocale(Long productCategoryId) {

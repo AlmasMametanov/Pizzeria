@@ -14,10 +14,8 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
-import static com.epam.pizzeria.action.ActionConstants.GET_BASKET_ACTION;
-import static com.epam.pizzeria.action.ActionConstants.PAGE_NOT_FOUND_ACTION;
-import static com.epam.pizzeria.util.constants.PageNameConstants.BASKET_JSP;
-import static com.epam.pizzeria.util.constants.ParameterNamesConstants.USER;
+import static com.epam.pizzeria.action.ActionConstants.*;
+import static com.epam.pizzeria.util.constants.ParameterNamesConstants.*;
 
 public class DeleteBasketAction implements Action {
     private BasketDAO basketDAO = new BasketDAOImpl();
@@ -28,16 +26,16 @@ public class DeleteBasketAction implements Action {
         HttpSession httpSession = request.getSession(true);
         User user = (User) httpSession.getAttribute(USER);
         if (user != null) {
-            List<Basket> baskets = (List<Basket>) httpSession.getAttribute("basketsByUser");
-            Long basketId = Long.parseLong(request.getParameter("basketId"));
-            int basketLoopIndex = Integer.parseInt(request.getParameter("basketLoopIndex"));
-            Integer totalPrice = (Integer) httpSession.getAttribute("totalPrice");
+            List<Basket> baskets = (List<Basket>) httpSession.getAttribute(BASKETS_BY_USER);
+            Long basketId = Long.parseLong(request.getParameter(BASKET_ID));
+            int basketLoopIndex = Integer.parseInt(request.getParameter(BASKET_LOOP_INDEX));
+            Integer totalPrice = (Integer) httpSession.getAttribute(TOTAL_PRICE);
             totalPrice -= baskets.get(basketLoopIndex).getProduct().getPrice();
             basketIngredientDetailDAO.deleteBasketIngredientDetailByBasketId(basketId);
             basketDAO.deleteBasketById(basketId);
             baskets.remove(basketLoopIndex);
-            httpSession.setAttribute("totalPrice", totalPrice);
-            httpSession.setAttribute("basketsByUser", baskets);
+            httpSession.setAttribute(TOTAL_PRICE, totalPrice);
+            httpSession.setAttribute(BASKETS_BY_USER, baskets);
             actionFactory.getAction(GET_BASKET_ACTION).execute(request, response);
         } else {
             response.sendRedirect(PAGE_NOT_FOUND_ACTION);

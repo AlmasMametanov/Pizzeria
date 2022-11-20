@@ -10,10 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-import static com.epam.pizzeria.action.ActionConstants.CHECKOUT_ORDER_ACTION;
-import static com.epam.pizzeria.action.ActionConstants.PAGE_NOT_FOUND_ACTION;
-import static com.epam.pizzeria.util.constants.ErrorConstants.ERROR_PHONE_NUMBER;
-import static com.epam.pizzeria.util.constants.ErrorConstants.PHONE_FORMAT_INCORRECT;
+import static com.epam.pizzeria.action.ActionConstants.*;
+import static com.epam.pizzeria.util.constants.ErrorConstants.*;
 import static com.epam.pizzeria.util.constants.ParameterNamesConstants.*;
 import static com.epam.pizzeria.validator.Validator.validatePhoneNumber;
 
@@ -25,10 +23,10 @@ public class ChangeUserPhoneNumberInCheckoutPageAction implements Action {
         HttpSession httpSession = request.getSession(true);
         User user = (User) httpSession.getAttribute(USER);
         if (user != null) {
-            if (!user.getPhoneNumber().equals(request.getParameter("phoneNumber"))) {
+            if (!user.getPhoneNumber().equals(request.getParameter(PHONE_NUMBER))) {
                 Boolean isValidatorPassed = validators(request);
                 if (isValidatorPassed) {
-                    String phoneNumber = request.getParameter("phoneNumber");
+                    String phoneNumber = request.getParameter(PHONE_NUMBER);
                     user.setPhoneNumber(phoneNumber);
                     userDAO.updateUserPhoneNumber(user);
                 }
@@ -43,7 +41,7 @@ public class ChangeUserPhoneNumberInCheckoutPageAction implements Action {
 
     private Boolean validators(HttpServletRequest request) {
         Boolean isValidatorPassed = true;
-        if (!validatePhoneNumber(request.getParameter("phoneNumber"))) {
+        if (!validatePhoneNumber(request.getParameter(PHONE_NUMBER))) {
             request.setAttribute(PHONE_FORMAT_INCORRECT, ERROR_PHONE_NUMBER);
             isValidatorPassed = false;
         }

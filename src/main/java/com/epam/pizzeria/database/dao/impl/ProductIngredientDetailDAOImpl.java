@@ -2,7 +2,6 @@ package com.epam.pizzeria.database.dao.impl;
 
 import com.epam.pizzeria.database.connection.ConnectionPool;
 import com.epam.pizzeria.database.dao.interfaces.ProductIngredientDetailDAO;
-import com.epam.pizzeria.entity.Product;
 import com.epam.pizzeria.entity.ProductIngredientDetail;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,7 +17,6 @@ public class ProductIngredientDetailDAOImpl implements ProductIngredientDetailDA
     private static final String INSERT_PRODUCT_INGREDIENT_DETAIL = "INSERT INTO product_ingredient_detail (product_id, ingredient_id) VALUES (?, ?)";
     private static final String GET_ALL_PRODUCT_INGREDIENT_DETAIL_BY_PRODUCT_ID = "SELECT ingredient_id FROM product_ingredient_detail WHERE product_id = ?";
     private static final String DELETE_PRODUCT_INGREDIENT_DETAIL = "DELETE FROM product_ingredient_detail WHERE ingredient_id = ? AND product_id = ?";
-
 
     ConnectionPool connectionPool;
     Connection connection;
@@ -52,7 +50,6 @@ public class ProductIngredientDetailDAOImpl implements ProductIngredientDetailDA
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 productIngredientDetailList.add(resultSet.getLong("ingredient_id"));
-//                setParametersToProductIngredientDetailList(productIngredientDetailList, resultSet);
             }
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);
@@ -76,17 +73,4 @@ public class ProductIngredientDetailDAOImpl implements ProductIngredientDetailDA
             connectionPool.returnConnection(connection);
         }
     }
-
-    private void setParametersToProductIngredientDetail(ProductIngredientDetail productIngredientDetail, ResultSet resultSet) throws SQLException {
-        productIngredientDetail.setId(resultSet.getLong("id"));
-        productIngredientDetail.setIngredientId(resultSet.getLong("ingredient_id"));
-        productIngredientDetail.setProductId(resultSet.getLong("product_id"));
-    }
-
-    private void setParametersToProductIngredientDetailList(List<ProductIngredientDetail> productIngredientDetailList, ResultSet resultSet) throws SQLException {
-        ProductIngredientDetail productIngredientDetail = new ProductIngredientDetail();
-        setParametersToProductIngredientDetail(productIngredientDetail, resultSet);
-        productIngredientDetailList.add(productIngredientDetail);
-    }
-
 }

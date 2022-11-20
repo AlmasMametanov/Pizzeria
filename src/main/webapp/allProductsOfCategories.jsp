@@ -6,7 +6,6 @@
 
 <jsp:useBean id="productCategoryDAO" class="com.epam.pizzeria.database.dao.impl.ProductCategoryLocaleDAOImpl"/>
 <jsp:useBean id="productDAO" class="com.epam.pizzeria.database.dao.impl.ProductDAOImpl"/>
-<jsp:useBean id="pizzaSizeDAO" class="com.epam.pizzeria.database.dao.impl.ProductSizeDAOImpl"/>
 <jsp:useBean id="productSizeDetailDAO" class="com.epam.pizzeria.database.dao.impl.ProductSizeDetailDAOImpl"/>
 
 <html>
@@ -20,52 +19,50 @@
                 <section>
                     <div class="row row-cols-1">
                         <h3><a id="${productCategory.name}">${productCategory.name}</a></h3>
-                        <c:forEach var="product" items="${productDAO.getAllProductsByCategoryId(productCategory.productCategoryId)}">
-                            <c:if test="${product.getIsActive()}">
-                                <div class="col-3">
-                                    <div class="card border-0">
-                                        <img src="images/${product.imageUrl}" class="card-img-top"><br/>
-                                        <div class="card-body">
-                                            <h5 class="card-title">${product.name}</h5>
-                                            <p class="card-text">${product.description}</p>
-                                        </div>
-                                        <div class="card-footer">
-                                            <c:choose>
-                                                <c:when test="${product.isPizza}">
-                                                    <form action="selectProductSize" method="post">
-                                                        <select name="productSizeId" required>
-                                                            <c:forEach var="productSizeDetail" items="${productSizeDetailDAO.getAllProductSizeDetailByProductId(product.id)}">
-                                                                <option value="${productSizeDetail.productSizeId}">${productSizeDetail.productSize.name} ${productSizeDetail.productSize.size} - ${productSizeDetail.price} тенге</option>
-                                                            </c:forEach>
-                                                        </select>
-                                                        <c:if test="${sessionScope.user != null}">
-                                                            <button class="btn btn-danger mt-3" type="submit" value="${product.id}" name="productId">Выбрать</button>
-                                                        </c:if>
-                                                    </form>
-                                                    <c:if test="${sessionScope.user == null}">
-                                                        <form action="login.jsp">
-                                                            <button class="btn btn-danger">Выбрать</button>
-                                                        </form>
-                                                    </c:if>
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <p>${product.price} тенге</p>
-                                                    <c:if test="${sessionScope.user == null}">
-                                                        <form action="login.jsp">
-                                                            <button class="btn btn-danger">Добавить в корзину</button>
-                                                        </form>
-                                                    </c:if>
+                        <c:forEach var="product" items="${productDAO.getAllActiveProductsByCategoryId(productCategory.productCategoryId)}">
+                            <div class="col-3 mb-3">
+                                <div class="card border-0">
+                                    <img src="images/${product.imageUrl}" class="card-img-top"><br/>
+                                    <div class="card-body">
+                                        <h5 class="card-title">${product.name}</h5>
+                                        <p class="card-text">${product.description}</p>
+                                    </div>
+                                    <div class="card-footer">
+                                        <c:choose>
+                                            <c:when test="${product.isPizza}">
+                                                <form action="selectProductSize" method="post">
+                                                    <select name="productSizeId" required>
+                                                        <c:forEach var="productSizeDetail" items="${productSizeDetailDAO.getAllProductSizeDetailByProductId(product.id)}">
+                                                            <option value="${productSizeDetail.productSizeId}">${productSizeDetail.productSize.name} ${productSizeDetail.productSize.size} - ${productSizeDetail.price} ₸</option>
+                                                        </c:forEach>
+                                                    </select>
                                                     <c:if test="${sessionScope.user != null}">
-                                                        <form action="createBasket" method="post">
-                                                            <button class="btn btn-danger" type="submit" value="${product.id}" name="productId">Добавить в корзину</button>
-                                                        </form>
+                                                        <button class="btn btn-danger mt-3" type="submit" value="${product.id}" name="productId"><fmt:message key="button.select"/></button>
                                                     </c:if>
-                                                </c:otherwise>
-                                            </c:choose>
-                                        </div>
+                                                </form>
+                                                <c:if test="${sessionScope.user == null}">
+                                                    <form action="login.jsp">
+                                                        <button class="btn btn-danger"><fmt:message key="button.select"/></button>
+                                                    </form>
+                                                </c:if>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <p>${product.price} ₸</p>
+                                                <c:if test="${sessionScope.user == null}">
+                                                    <form action="login.jsp">
+                                                        <button class="btn btn-danger"><fmt:message key="button.addToBasket"/></button>
+                                                    </form>
+                                                </c:if>
+                                                <c:if test="${sessionScope.user != null}">
+                                                    <form action="createBasket" method="post">
+                                                        <button class="btn btn-danger" type="submit" value="${product.id}" name="productId"><fmt:message key="button.addToBasket"/></button>
+                                                    </form>
+                                                </c:if>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </div>
                                 </div>
-                            </c:if>
+                            </div>
                         </c:forEach>
                     </div>
                 </section>

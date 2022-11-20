@@ -15,7 +15,6 @@ public class OrderDAOImpl implements OrderDAO {
     private final Logger logger = LogManager.getLogger(this.getClass().getName());
     private static final String INSERT_ORDER = "INSERT INTO orders (user_id, status_id, total_price, date_start, ready_in, delivery_method_id) " +
             "VALUES (?, ?, ?, ?, ?, ?)";
-    private static final String GET_LAST_ORDER_ID_BY_USER_ID = "SELECT id FROM orders WHERE user_id = ? ORDER BY id DESC LIMIT 1";
     private static final String GET_ALL_ORDERS_BY_USER_ID_AND_LOCALE_ID = "SELECT * FROM orders o JOIN status_locale sl ON o.status_id = sl.status_id WHERE user_id = ? AND sl.locale_id = ? ORDER BY o.id DESC";
     private static final String UPDATE_ORDER_STATUS_BY_ORDER_ID = "UPDATE orders SET status_id = ? WHERE id = ?";
 
@@ -43,25 +42,6 @@ public class OrderDAOImpl implements OrderDAO {
         } finally {
             connectionPool.returnConnection(connection);
         }
-    }
-
-    @Override
-    public Long getLastOrderIdByUserId(Long userId) {
-        connectionPool = getInstance();
-        connection = connectionPool.getConnection();
-        Long orderId = null;
-        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_LAST_ORDER_ID_BY_USER_ID)) {
-            preparedStatement.setLong(1, userId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                orderId = resultSet.getLong("id");
-            }
-        } catch (SQLException e) {
-            logger.error(e.getMessage(), e);
-        } finally {
-            connectionPool.returnConnection(connection);
-        }
-        return orderId;
     }
 
     @Override

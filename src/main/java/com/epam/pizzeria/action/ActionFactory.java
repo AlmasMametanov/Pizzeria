@@ -36,6 +36,9 @@ public class ActionFactory {
         ACTION_MAP.put(CHANGE_PRODUCT_ACTIVE_STATUS_ACTION, new ChangeProductActiveStatusAction());
         ACTION_MAP.put(GET_ALL_PRODUCT_ACTION, new GetAllProductAction());
         ACTION_MAP.put(CHANGE_PRODUCT_ACTION, new ChangeProductAction());
+        ACTION_MAP.put(GET_ALL_ADDITIONAL_INGREDIENT_ACTION, new GetAllIngredientsAction());
+        ACTION_MAP.put(UPDATE_INGREDIENT_ACTION, new ChangeIngredientAction());
+        ACTION_MAP.put(CHANGE_INGREDIENT_ACTIVE_STATUS, new ChangeIngredientActiveStatusAction());
     }
 
     public static ActionFactory getInstance() {

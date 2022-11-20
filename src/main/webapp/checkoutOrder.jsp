@@ -22,10 +22,10 @@
                                     <div class="col-5">
                                         <c:choose>
                                             <c:when test="${basket.count > 1}">
-                                                <h5 class="text-end">${basket.count} x ${basket.product.price / basket.count} тг.</h5>
+                                                <h5 class="text-end">${basket.count} x ${basket.product.price / basket.count} ₸</h5>
                                             </c:when>
                                             <c:otherwise>
-                                                <h5 class="text-end">${basket.product.price} тг.</h5>
+                                                <h5 class="text-end">${basket.product.price} ₸</h5>
                                             </c:otherwise>
                                         </c:choose>
                                     </div>
@@ -36,7 +36,7 @@
                                             <c:when test="${basket.product.isPizza}">
                                                 <p class="text-muted" style="font-size: 14px;">${basket.product.productSize.name} ${basket.product.productSize.size}<br/>
                                                     <c:if test="${basket.product.basketIngredientDetailList.size() != 0}">
-                                                        Добавлено:
+                                                        <fmt:message key="label.added"/>
                                                         <c:forEach var="ingredientFromBasket" items="${basket.product.basketIngredientDetailList}" varStatus="loop">
                                                             <c:choose>
                                                                 <c:when test="${!loop.last}">
@@ -60,7 +60,7 @@
                             <hr class="my-2"/>
                             <div class="row">
                                 <div class="col">
-                                    <h5>Сумма заказа: ${sessionScope.totalPrice} тенге</h5>
+                                    <h5><fmt:message key="label.totalCost"/> ${sessionScope.totalPrice} ₸</h5>
                                 </div>
                             </div>
                         </div>
@@ -73,62 +73,62 @@
                                 <h2>${sessionScope.deliveryMethodLocale.name}</h2>
                                 <table class="table">
                                     <tr>
-                                        <th class="align-middle">Имя</th>
+                                        <th class="align-middle"><fmt:message key="label.firstName"/></th>
                                         <th class="align-middle ps-4" style="font-weight: normal;">${sessionScope.user.firstName}</th>
                                     </tr>
                                     <tr>
-                                        <th class="align-middle">Номер телефона</th>
+                                        <th class="align-middle"><fmt:message key="label.phoneNumber"/></th>
                                         <th>
                                             <c:if test="${requestScope.phoneNumberFormatIncorrect != null}">
                                                 <p class="text-danger"><fmt:message key="error.phoneNumber"/></p>
                                             </c:if>
                                             <form class="my-0 border rounded input-group" action="changeUserPhoneNumberInCheckoutPageAction" method="post">
                                                 <input class="form-control border-0" type="text" name="phoneNumber" value="${sessionScope.user.phoneNumber}">
-                                                <button class="btn btn-outline-light text-danger">Изменить</button>
+                                                <button class="btn btn-outline-light text-danger"><fmt:message key="button.edit"/></button>
                                             </form>
                                         </th>
                                     </tr>
                                     <c:if test="${sessionScope.deliveryMethodLocale.deliveryMethodId == 2}">
                                         <tr>
-                                            <th class="align-middle">Адрес доставки</th>
+                                            <th class="align-middle"><fmt:message key="label.deliveryAddress"/></th>
                                             <th>
                                                 <form class="my-0 border rounded input-group" action="changeUserAddressInCheckoutPageAction" method="post">
                                                     <input class="form-control border-0" type="text" name="address" value="${sessionScope.user.address}">
-                                                    <button class="btn btn-outline-light text-danger">Изменить</button>
+                                                    <button class="btn btn-outline-light text-danger"><fmt:message key="button.edit"/></button>
                                                 </form>
                                             </th>
                                         </tr>
                                     </c:if>
                                 </table>
                                 <form action="createOrder" method="post">
-                                    <h2>Способ оплаты картой на сайте</h2>
+                                    <h2><fmt:message key="label.methodOfPaymentByCardOnSite"/></h2>
                                     <div class="card border-0 background-color">
                                         <div class="card-body w-50">
                                             <div class="row">
                                                 <div class="col">
                                                     <c:if test="${requestScope.cardFormatIncorrect != null}">
-                                                        <p class="text-danger">${requestScope.cardFormatIncorrect}</p>
+                                                        <p class="text-danger"><fmt:message key="error.cardNumber"/></p>
                                                     </c:if>
-                                                    <input class="form-control" type="text" name="cardNumber" placeholder="Номер карты"/><br/>
+                                                    <input class="form-control" type="text" name="cardNumber" placeholder="<fmt:message key="label.cardNumber"/>"/><br/>
                                                 </div>
                                             </div>
                                             <div class="row row-cols-2">
                                                 <div class="col-8">
                                                     <c:if test="${requestScope.validityCardFormatIncorrect != null}">
-                                                        <p class="text-danger">${requestScope.validityCardFormatIncorrect}</p>
+                                                        <p class="text-danger"><fmt:message key="error.validity"/></p>
                                                     </c:if>
-                                                    <input class="form-control" type="text" name="validity" placeholder="Срок действия"/>
+                                                    <input class="form-control" type="text" name="validity" placeholder="<fmt:message key="label.validity"/>"/>
                                                 </div>
                                                 <div class="col-4">
                                                     <c:if test="${requestScope.cvcOfBankCardIncorrect != null}">
-                                                        <p class="text-danger">${requestScope.cvcOfBankCardIncorrect}</p>
+                                                        <p class="text-danger"><fmt:message key="error.cvc"/></p>
                                                     </c:if>
-                                                    <input class="form-control" type="password" name="cvc" placeholder="CVC"/><br/>
+                                                    <input class="form-control" type="password" name="cvc" placeholder="<fmt:message key="label.cvc"/>"/><br/>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <button class="btn btn-danger ms-3">Оформить заказ на ${sessionScope.totalPrice} тг.</button>
+                                    <button class="btn btn-danger ms-3"><fmt:message key="button.placeAnOrderFor"/> ${sessionScope.totalPrice} ₸</button>
                                 </form>
                             </div>
                         </div>

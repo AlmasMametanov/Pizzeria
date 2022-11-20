@@ -1,5 +1,6 @@
 package com.epam.pizzeria.entity;
 
+import java.util.List;
 import java.util.Objects;
 
 public class ProductSizeIngredientDetail {
@@ -8,6 +9,7 @@ public class ProductSizeIngredientDetail {
     private Long ingredientId;
     private Integer price;
     private AdditionalIngredient additionalIngredient;
+    private List<ProductSize> productSizeList;
 
     public Long getId() {
         return id;
@@ -49,6 +51,14 @@ public class ProductSizeIngredientDetail {
         this.additionalIngredient = additionalIngredient;
     }
 
+    public List<ProductSize> getProductSizeList() {
+        return productSizeList;
+    }
+
+    public void setProductSizeList(List<ProductSize> productSizeList) {
+        this.productSizeList = productSizeList;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -58,12 +68,13 @@ public class ProductSizeIngredientDetail {
                 Objects.equals(sizeId, that.sizeId) &&
                 Objects.equals(ingredientId, that.ingredientId) &&
                 Objects.equals(price, that.price) &&
-                Objects.equals(additionalIngredient, that.additionalIngredient);
+                Objects.equals(additionalIngredient, that.additionalIngredient) &&
+                Objects.equals(productSizeList, that.productSizeList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, sizeId, ingredientId, price, additionalIngredient);
+        return Objects.hash(id, sizeId, ingredientId, price, additionalIngredient, productSizeList);
     }
 
     @Override
@@ -74,6 +85,7 @@ public class ProductSizeIngredientDetail {
                 ", ingredientId=" + ingredientId +
                 ", price=" + price +
                 ", additionalIngredient=" + additionalIngredient +
+                ", productSizeList=" + productSizeList +
                 '}';
     }
 }

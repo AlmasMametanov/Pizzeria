@@ -12,8 +12,9 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
-import static com.epam.pizzeria.action.ActionConstants.PAGE_NOT_FOUND_ACTION;
-import static com.epam.pizzeria.util.constants.ParameterNamesConstants.USER;
+import static com.epam.pizzeria.action.ActionConstants.*;
+import static com.epam.pizzeria.util.constants.PageNameConstants.*;
+import static com.epam.pizzeria.util.constants.ParameterNamesConstants.*;
 
 public class SelectProductSizeAction implements Action {
     ProductSizeIngredientDetailDAO productSizeIngredientDetailDAO = new ProductSizeIngredientDetailDAOImpl();
@@ -22,13 +23,13 @@ public class SelectProductSizeAction implements Action {
         HttpSession httpSession = request.getSession(true);
         User user = (User) httpSession.getAttribute(USER);
         if (user != null) {
-            Long productId = Long.parseLong(request.getParameter("productId"));
-            Long productSizeId = Long.parseLong(request.getParameter("productSizeId"));
+            Long productId = Long.parseLong(request.getParameter(PRODUCT_ID));
+            Long productSizeId = Long.parseLong(request.getParameter(PRODUCT_SIZE_ID));
             List<ProductSizeIngredientDetail> productSizeIngredientDetailList = productSizeIngredientDetailDAO.getAllProductSizeIngredientDetailBySizeId(productSizeId);
-            request.setAttribute("productId", productId);
-            request.setAttribute("productSizeId", productSizeId);
-            request.setAttribute("productSizeIngredientDetailList", productSizeIngredientDetailList);
-            request.getRequestDispatcher("chooseAdditionalIngredients.jsp").forward(request, response);
+            request.setAttribute(PRODUCT_ID, productId);
+            request.setAttribute(PRODUCT_SIZE_ID, productSizeId);
+            request.setAttribute(PRODUCT_SIZE_INGREDIENT_DETAIL_LIST, productSizeIngredientDetailList);
+            request.getRequestDispatcher(CHOOSE_ADDITIONAL_INGREDIENTS_JSP).forward(request, response);
         } else {
             response.sendRedirect(PAGE_NOT_FOUND_ACTION);
         }

@@ -17,7 +17,9 @@ public class ProductSizeIngredientDetailDAOImpl implements ProductSizeIngredient
     private final Logger logger = LogManager.getLogger(this.getClass().getName());
     private static final String INSERT_INTO_PRODUCT_SIZE_INGREDIENT_DETAIL = "INSERT INTO additional_ingredient_detail (size_id, additional_ingredient_id, price) VALUES (?, ?, ?)";
     private static final String GET_ALL_PRODUCT_SIZE_INGREDIENT_DETAIL_BY_SIZE_ID = "SELECT aid.id, size_id, additional_ingredient_id, " +
-            "price, name FROM additional_ingredient_detail aid JOIN additional_ingredient ai ON additional_ingredient_id = ai.id WHERE size_id = ?";
+            "price, name, image_url, is_active FROM additional_ingredient_detail aid JOIN additional_ingredient ai ON additional_ingredient_id = ai.id WHERE size_id = ? AND is_active = 1";
+    private static final String UPDATE_PRODUCT_SIZE_INGREDIENT_PRICE = "UPDATE additional_ingredient_detail SET price = ? WHERE id = ?";
+
     ConnectionPool connectionPool;
     Connection connection;
 
@@ -46,7 +48,9 @@ public class ProductSizeIngredientDetailDAOImpl implements ProductSizeIngredient
             preparedStatement.setLong(1, sizeId);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                setParametersToSizeIngredientDetailList(sizeIngredientList, resultSet);
+                ProductSizeIngredientDetail sizeIngredient = setParametersToSizeIngredientDetail(resultSet);
+                sizeIngredient.setAdditionalIngredient(setParametersToIngredient(resultSet));
+                sizeIngredientList.add(sizeIngredient);
             }
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);
@@ -56,23 +60,38 @@ public class ProductSizeIngredientDetailDAOImpl implements ProductSizeIngredient
         return sizeIngredientList;
     }
 
+    @Override
+    public void updateProductSizeIngredientPrice(Long productSizeIngredientDetailId, Integer price) {
+        connectionPool = getInstance();
+        connection = connectionPool.getConnection();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_PRODUCT_SIZE_INGREDIENT_PRICE)) {
+            preparedStatement.setInt(1, price);
+            preparedStatement.setLong(2, productSizeIngredientDetailId);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            logger.error(e.getMessage(), e);
+        } finally {
+            connectionPool.returnConnection(connection);
+        }
+    }
+
+
+
     private AdditionalIngredient setParametersToIngredient(ResultSet resultSet) throws SQLException {
         AdditionalIngredient additionalIngredient = new AdditionalIngredient();
         additionalIngredient.setName(resultSet.getString("name"));
+        additionalIngredient.setImageUrl(resultSet.getString("image_url"));
+        additionalIngredient.setIsActive(resultSet.getBoolean("is_active"));
         return additionalIngredient;
     }
 
-    private void setParametersToSizeIngredientDetail(ProductSizeIngredientDetail sizeIngredient, ResultSet resultSet) throws SQLException {
+
+    private ProductSizeIngredientDetail setParametersToSizeIngredientDetail( ResultSet resultSet) throws SQLException {
+        ProductSizeIngredientDetail sizeIngredient = new ProductSizeIngredientDetail();
         sizeIngredient.setId(resultSet.getLong("id"));
         sizeIngredient.setSizeId(resultSet.getLong("size_id"));
         sizeIngredient.setIngredientId(resultSet.getLong("additional_ingredient_id"));
         sizeIngredient.setPrice(resultSet.getInt("price"));
-        sizeIngredient.setAdditionalIngredient(setParametersToIngredient(resultSet));
-    }
-
-    private void setParametersToSizeIngredientDetailList(List<ProductSizeIngredientDetail> sizeIngredientList, ResultSet resultSet) throws SQLException {
-        ProductSizeIngredientDetail sizeIngredient = new ProductSizeIngredientDetail();
-        setParametersToSizeIngredientDetail(sizeIngredient, resultSet);
-        sizeIngredientList.add(sizeIngredient);
+        return sizeIngredient;
     }
 }

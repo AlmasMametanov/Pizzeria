@@ -13,7 +13,9 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.epam.pizzeria.action.ActionConstants.PAGE_NOT_FOUND_ACTION;
+import static com.epam.pizzeria.action.ActionConstants.*;
+import static com.epam.pizzeria.util.constants.ErrorConstants.*;
+import static com.epam.pizzeria.util.constants.PageNameConstants.*;
 import static com.epam.pizzeria.util.constants.ParameterNamesConstants.*;
 import static com.epam.pizzeria.validator.Validator.*;
 
@@ -31,18 +33,17 @@ public class CreateOrderAction implements Action {
         if (user != null) {
             Boolean isValidatorPassed = validators(request);
             if (isValidatorPassed) {
-                List<Basket> basketList = (List<Basket>) httpSession.getAttribute("basketsByUser");
+                List<Basket> basketList = (List<Basket>) httpSession.getAttribute(BASKETS_BY_USER);
                 Order order = new Order();
                 setParametersToOrderAndInsertIntoDatabase(order, httpSession);
                 for (Basket basket : basketList) {
                     setParametersToOrderDetailAndInsertIntoDatabase(order.getId(), basket);
-
                     basketIngredientDetailDAO.deleteBasketIngredientDetailByBasketId(basket.getId());
                     basketDAO.deleteBasketById(basket.getId());
                 }
-                response.sendRedirect("index.jsp");
+                response.sendRedirect(INDEX_JSP);
             } else {
-                request.getRequestDispatcher("checkoutOrder.jsp").forward(request, response);
+                request.getRequestDispatcher(CHECKOUT_ORDER_JSP).forward(request, response);
             }
         } else {
             response.sendRedirect(PAGE_NOT_FOUND_ACTION);
@@ -51,16 +52,16 @@ public class CreateOrderAction implements Action {
 
     private Boolean validators(HttpServletRequest request) {
         Boolean isValidatorPassed = true;
-        if (!validateCardNumber(request.getParameter("cardNumber"))) {
-            request.setAttribute("cardFormatIncorrect", "Bank card number has to contain 16 digits from 0 to 9");
+        if (!validateCardNumber(request.getParameter(CARD_NUMBER))) {
+            request.setAttribute(CARD_NUMBER_FORMAT_INCORRECT, ERROR_CARD_NUMBER);
             isValidatorPassed = false;
         }
-        if (!validateValidityOfBankCard(request.getParameter("validity"))) {
-            request.setAttribute("validityCardFormatIncorrect", "Bank card validity has to be MM/yy");
+        if (!validateValidityOfBankCard(request.getParameter(VALIDITY))) {
+            request.setAttribute(VALIDITY_CARD_FORMAT_INCORRECT, ERROR_VALIDITY_CARD);
             isValidatorPassed = false;
         }
-        if (!validateCVCOfBankCard(request.getParameter("cvc"))) {
-            request.setAttribute("cvcOfBankCardIncorrect", "Bank card CVC has to contain 3 digits from 0 to 9");
+        if (!validateCVCOfBankCard(request.getParameter(CVC))) {
+            request.setAttribute(CVC_BANK_CARD_FORMAT_INCORRECT, ERROR_CVC_BANK_CARD);
             isValidatorPassed = false;
         }
         if (isValidatorPassed)
@@ -82,7 +83,6 @@ public class CreateOrderAction implements Action {
         } else {
             orderDetailDAO.insertOrderDetailIfSizeIsNull(orderDetail);
         }
-
     }
 
     private void setParametersToOrderIngredientDetailAndInsertIntoDatabase(Basket basket, Long orderDetailId) {
@@ -96,8 +96,8 @@ public class CreateOrderAction implements Action {
 
     private void setParametersToOrderAndInsertIntoDatabase(Order order, HttpSession httpSession) {
         User user = (User) httpSession.getAttribute(USER);
-        Integer totalPrice = (Integer) httpSession.getAttribute("totalPrice");
-        DeliveryMethodLocale deliveryMethodLocale = (DeliveryMethodLocale) httpSession.getAttribute("deliveryMethodLocale");
+        Integer totalPrice = (Integer) httpSession.getAttribute(TOTAL_PRICE);
+        DeliveryMethodLocale deliveryMethodLocale = (DeliveryMethodLocale) httpSession.getAttribute(DELIVERY_METHOD_LOCALE);
         LocalDateTime orderTime = LocalDateTime.now();
         Timestamp orderTimeForDB = Timestamp.valueOf(orderTime);
         order.setUserId(user.getId());

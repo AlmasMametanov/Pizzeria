@@ -24,7 +24,6 @@ public class UserDAOImpl implements UserDAO {
     private static final String UPDATE_USER_ADDRESS = "UPDATE user SET address = ? WHERE id = ?";
     private static final String UPDATE_USER_PHONE_NUMBER = "UPDATE user SET phone_number = ? WHERE id = ?";
     private static final String UPDATE_USER_BAN_STATUS = "UPDATE user SET is_banned = ? WHERE id = ?";
-    private static final String UPDATE_USER_PASSWORD = "UPDATE user SET password = ? WHERE id = ?";
 
     private ConnectionPool connectionPool;
     private Connection connection;
@@ -146,21 +145,6 @@ public class UserDAOImpl implements UserDAO {
         try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER_BAN_STATUS)) {
             preparedStatement.setBoolean(1, user.getIsBanned());
             preparedStatement.setLong(2, user.getId());
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            logger.error(e.getMessage(), e);
-        } finally {
-            connectionPool.returnConnection(connection);
-        }
-    }
-
-    @Override
-    public void updateUserPassword(Long userId, String newPassword) {
-        connectionPool = getInstance();
-        connection = connectionPool.getConnection();
-        try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER_PASSWORD)) {
-            preparedStatement.setString(1, newPassword);
-            preparedStatement.setLong(2, userId);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);

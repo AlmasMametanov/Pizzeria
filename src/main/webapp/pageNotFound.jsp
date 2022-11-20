@@ -4,10 +4,10 @@
 <fmt:setBundle basename="locale"/>
 
 <html>
-<head>
-    <title>Страница не найдена</title>
-</head>
-<body>
-Страница не найдена
-</body>
+    <head>
+        <title><fmt:message key="label.pageNotFound"/></title>
+    </head>
+    <body>
+        <h3><fmt:message key="label.pageNotFound"/></h3>
+    </body>
 </html>

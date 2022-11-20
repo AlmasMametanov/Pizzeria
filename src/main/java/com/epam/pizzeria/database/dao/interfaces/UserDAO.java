@@ -12,5 +12,4 @@ public interface UserDAO {
     void updateUserAddress(User user);
     void updateUserPhoneNumber(User user);
     void updateUserBanStatus(User user);
-    void updateUserPassword(Long userId, String newPassword);
 }

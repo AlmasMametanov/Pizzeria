@@ -6,7 +6,6 @@ import com.epam.pizzeria.database.dao.interfaces.ProductDAO;
 import com.epam.pizzeria.database.dao.interfaces.ProductIngredientDetailDAO;
 import com.epam.pizzeria.database.dao.interfaces.ProductSizeDetailDAO;
 import com.epam.pizzeria.entity.Product;
-import com.epam.pizzeria.entity.ProductSizeDetail;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,13 +18,11 @@ public class ProductDAOImpl implements ProductDAO {
     private static final String INSERT_PRODUCT = "INSERT INTO product (name, description, price, is_pizza, " +
             "product_category_id, image_url) VALUES (?, ?, ?, ?, ?, ?)";
     private static final String GET_PRODUCT_BY_ID = "SELECT * FROM product WHERE id = ?";
-    private static final String GET_ALL_PRODUCTS_BY_NAME = "SELECT * FROM product WHERE name = ?";
     private static final String GET_ALL_PRODUCT = "SELECT * FROM product ORDER BY product_category_id";
-    private static final String GET_ALL_PRODUCTS_BY_CATEGORY_ID = "SELECT * FROM product WHERE product_category_id = ?";
+    private static final String GET_ALL_ACTIVE_PRODUCTS_BY_CATEGORY_ID = "SELECT * FROM product WHERE product_category_id = ? AND is_active = 1";
     private static final String UPDATE_PRODUCT = "UPDATE product SET name = ?, description = ?, price = ?, image_url = ?, " +
             "is_pizza = ?, product_category_id = ? WHERE id = ?";
     private static final String UPDATE_PRODUCT_ACTIVE_STATUS = "UPDATE product SET is_active = ? WHERE id = ?";
-    private static final String DELETE_PRODUCT = "DELETE FROM product WHERE id = ?";
 
     ConnectionPool connectionPool;
     Connection connection;
@@ -73,25 +70,6 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     @Override
-    public List<Product> getAllProductsByName(String productName) {
-        connectionPool = getInstance();
-        connection = connectionPool.getConnection();
-        List<Product> products = new ArrayList<>();
-        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_PRODUCTS_BY_NAME)) {
-            preparedStatement.setString(1, productName);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                setParametersToProductList(products, resultSet);
-            }
-        } catch (SQLException e) {
-            logger.error(e.getMessage(), e);
-        } finally {
-            connectionPool.returnConnection(connection);
-        }
-        return products;
-    }
-
-    @Override
     public List<Product> getAllProduct() {
         connectionPool = getInstance();
         connection = connectionPool.getConnection();
@@ -110,11 +88,11 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     @Override
-    public List<Product> getAllProductsByCategoryId(Long productCategoryId) {
+    public List<Product> getAllActiveProductsByCategoryId(Long productCategoryId) {
         connectionPool = getInstance();
         connection = connectionPool.getConnection();
         List<Product> products = new ArrayList<>();
-        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_PRODUCTS_BY_CATEGORY_ID)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_ACTIVE_PRODUCTS_BY_CATEGORY_ID)) {
             preparedStatement.setLong(1, productCategoryId);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -155,20 +133,6 @@ public class ProductDAOImpl implements ProductDAO {
         try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_PRODUCT_ACTIVE_STATUS)) {
             preparedStatement.setBoolean(1, product.getIsActive());
             preparedStatement.setLong(2, product.getId());
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            logger.error(e.getMessage(), e);
-        } finally {
-            connectionPool.returnConnection(connection);
-        }
-    }
-
-    @Override
-    public void deleteProductById(Long productId) {
-        connectionPool = getInstance();
-        connection = connectionPool.getConnection();
-        try (PreparedStatement preparedStatement = connection.prepareStatement(DELETE_PRODUCT)) {
-            preparedStatement.setLong(1, productId);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);

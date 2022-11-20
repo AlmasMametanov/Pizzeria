@@ -17,7 +17,6 @@ public class ProductSizeDetailDAOImpl implements ProductSizeDetailDAO {
     private final Logger logger = LogManager.getLogger(this.getClass().getName());
     private static final String INSERT_PRODUCT_SIZE_DETAIL = "INSERT INTO product_size_detail (product_id, size_id, price) " +
             "VALUES (?, ?, ?)";
-    private static final String GET_PRODUCT_SIZE_DETAIL_BY_ID = "SELECT * FROM product_size_detail WHERE id";
     private static final String GET_ALL_PRODUCT_SIZE_DETAIL_BY_PRODUCT_ID = "SELECT psd.id, size_id, product_id, price, name, size " +
             "FROM product_size_detail psd JOIN size s ON psd.size_id = s.id WHERE product_id = ?";
     private static final String UPDATE_PRICE_BY_ID = "UPDATE product_size_detail SET price = ? WHERE id = ?";
@@ -39,25 +38,6 @@ public class ProductSizeDetailDAOImpl implements ProductSizeDetailDAO {
         } finally {
             connectionPool.returnConnection(connection);
         }
-    }
-
-    @Override
-    public ProductSizeDetail getProductSizeDetailById(Long id) {
-        connectionPool = getInstance();
-        connection = connectionPool.getConnection();
-        ProductSizeDetail productSizeDetail = new ProductSizeDetail();
-        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_PRODUCT_SIZE_DETAIL_BY_ID)) {
-            preparedStatement.setLong(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                setParametersToProductSizeDetail(productSizeDetail, resultSet);
-            }
-        } catch (SQLException e) {
-            logger.error(e.getMessage(), e);
-        } finally {
-            connectionPool.returnConnection(connection);
-        }
-        return productSizeDetail;
     }
 
     public List<ProductSizeDetail> getAllProductSizeDetailByProductId(Long productId) {

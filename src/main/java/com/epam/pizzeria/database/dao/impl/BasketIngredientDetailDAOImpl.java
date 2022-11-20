@@ -3,7 +3,6 @@ package com.epam.pizzeria.database.dao.impl;
 import com.epam.pizzeria.database.connection.ConnectionPool;
 import com.epam.pizzeria.database.dao.interfaces.BasketIngredientDetailDAO;
 import com.epam.pizzeria.entity.AdditionalIngredient;
-import com.epam.pizzeria.entity.Basket;
 import com.epam.pizzeria.entity.BasketIngredientDetail;
 import com.epam.pizzeria.entity.ProductSizeIngredientDetail;
 import org.apache.logging.log4j.LogManager;
@@ -21,8 +20,7 @@ import static com.epam.pizzeria.database.connection.ConnectionPool.getInstance;
 public class BasketIngredientDetailDAOImpl implements BasketIngredientDetailDAO {
     private final Logger logger = LogManager.getLogger(this.getClass().getName());
     private static final String INSERT_BASKET_INGREDIENT_DETAIL = "INSERT INTO basket_ingredient_detail (additional_ingredient_detail_id, basket_id) VALUES (?, ?)";
-    private static final String GET_BASKET_INGREDIENT_DETAIL_BY_BASKET_ID_AND_INGREDIENT_ID = "SELECT * FROM basket_ingredient_detail WHERE basket_id = ? AND additional_ingredient_detail_id = ?";
-    private static final String GET_BASKET_INGREDIENT_DETAIL_BY_BASKET_ID = "SELECT bid.additional_ingredient_detail_id, aid.additional_ingredient_id FROM basket_ingredient_detail bid JOIN additional_ingredient_detail aid ON bid.additional_ingredient_detail_id = aid.id WHERE basket_id = ?";
+    private static final String GET_BASKET_INGREDIENT_DETAIL_BY_BASKET_ID = "SELECT additional_ingredient_detail_id FROM basket_ingredient_detail WHERE basket_id = ?";
     private static final String GET_BASKET_INGREDIENT_DETAIL_BY_BASKET_ID_AND_INGREDIENT_ID_AND_SIZE_ID = "SELECT bid.id, basket_id, bid.additional_ingredient_detail_id, aid.size_id, ai.name, aid.price FROM " +
             "basket_ingredient_detail bid join additional_ingredient_detail aid join additional_ingredient ai ON bid.additional_ingredient_detail_id = aid.id AND aid.additional_ingredient_id = ai.id WHERE bid.basket_id = ?";
     private static final String DELETE_BASKET_INGREDIENT_DETAIL_BY_BASKET_ID = "DELETE FROM basket_ingredient_detail WHERE basket_id = ?";
@@ -52,7 +50,7 @@ public class BasketIngredientDetailDAOImpl implements BasketIngredientDetailDAO 
             preparedStatement.setLong(1, basketId);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                ingredientIdOfBasketList.add(resultSet.getLong("additional_ingredient_id"));
+                ingredientIdOfBasketList.add(resultSet.getLong("additional_ingredient_detail_id"));
             }
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);
@@ -60,25 +58,6 @@ public class BasketIngredientDetailDAOImpl implements BasketIngredientDetailDAO 
             connectionPool.returnConnection(connection);
         }
         return ingredientIdOfBasketList;
-    }
-
-    @Override
-    public Boolean getBasketIngredientDetailByBasketIdAndIngredientId(Long basketId, Long ingredientId) {
-        connectionPool = getInstance();
-        connection = connectionPool.getConnection();
-        Boolean isIngredientExistInBasket = true;
-        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_BASKET_INGREDIENT_DETAIL_BY_BASKET_ID_AND_INGREDIENT_ID)) {
-            preparedStatement.setLong(1, basketId);
-            preparedStatement.setLong(2, ingredientId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.isBeforeFirst() == false)
-                isIngredientExistInBasket = false;
-        } catch (SQLException e) {
-            logger.error(e.getMessage(), e);
-        } finally {
-            connectionPool.returnConnection(connection);
-        }
-        return isIngredientExistInBasket;
     }
 
     @Override

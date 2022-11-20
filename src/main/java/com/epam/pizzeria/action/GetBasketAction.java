@@ -11,7 +11,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
-import static com.epam.pizzeria.action.ActionConstants.PAGE_NOT_FOUND_ACTION;
+import static com.epam.pizzeria.action.ActionConstants.*;
 import static com.epam.pizzeria.util.constants.PageNameConstants.*;
 import static com.epam.pizzeria.util.constants.ParameterNamesConstants.*;
 import static com.epam.pizzeria.util.constants.LimitConstants.*;
@@ -49,11 +49,11 @@ public class GetBasketAction implements Action {
     }
 
     private void setAttributes(HttpSession httpSession, Integer totalPrice, List<Basket> baskets, List<DeliveryMethodLocale> deliveryMethodLocaleList) {
-        httpSession.setAttribute("deliveryMethodLocaleList", deliveryMethodLocaleList);
-        httpSession.setAttribute("totalPrice", totalPrice);
-        httpSession.setAttribute("basketsByUser", baskets);
-        httpSession.setAttribute("minProductCountInBasket", MIN_PRODUCT_COUNT_IN_BASKET);
-        httpSession.setAttribute("maxProductCountInBasket", MAX_PRODUCT_COUNT_IN_BASKET);
+        httpSession.setAttribute(DELIVERY_METHOD_LOCALE_LIST, deliveryMethodLocaleList);
+        httpSession.setAttribute(TOTAL_PRICE, totalPrice);
+        httpSession.setAttribute(BASKETS_BY_USER, baskets);
+        httpSession.setAttribute(MIN_PRODUCT_COUNT_IN_BASKET_PARAMETER, MIN_PRODUCT_COUNT_IN_BASKET);
+        httpSession.setAttribute(MAX_PRODUCT_COUNT_IN_BASKET_PARAMETER, MAX_PRODUCT_COUNT_IN_BASKET);
     }
 
     private Integer getTotalPriceOfAdditionalIngredients(List<BasketIngredientDetail> basketIngredientDetailList) {

@@ -14,7 +14,7 @@
                 <div class="col-12 col-md-8 col-lg-6 col-xl-5">
                     <div class="card bg-dark text-white" style="border-radius: 1rem;">
                         <div class="card-body p-4 text-start">
-                            <h3 class="fw-bold mb-2 text-uppercase text-center">Sign Up</h3>
+                            <h3 class="fw-bold mb-2 text-uppercase text-center"><fmt:message key="label.signup"/></h3>
                             <form action="signup" method="post">
                                 <div class="form-outline mb-4">
                                     <label class="form-label" for="email"><fmt:message key="label.email"/></label>

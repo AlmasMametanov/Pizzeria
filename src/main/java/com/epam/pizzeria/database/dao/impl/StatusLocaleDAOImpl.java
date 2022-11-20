@@ -3,7 +3,6 @@ package com.epam.pizzeria.database.dao.impl;
 import static com.epam.pizzeria.database.connection.ConnectionPool.getInstance;
 import com.epam.pizzeria.database.connection.ConnectionPool;
 import com.epam.pizzeria.database.dao.interfaces.StatusLocaleDAO;
-import com.epam.pizzeria.entity.Status;
 import com.epam.pizzeria.entity.StatusLocale;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

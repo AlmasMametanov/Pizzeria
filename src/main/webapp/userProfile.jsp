@@ -17,7 +17,7 @@
                 <li class="nav-item mb-2"><fmt:message key="label.birthday"/>: ${sessionScope.user.birthday}</li>
                 <li class="nav-item mb-2"><fmt:message key="label.phoneNumber"/>: ${sessionScope.user.phoneNumber}</li>
                 <li class="nav-item mb-2"><fmt:message key="label.address"/>: ${sessionScope.user.address}</li>
-                <li class="nav-item mb-2">
+                <li class="nav-item mb-2 mt-2">
                     <form action="getOrders" method="get">
                         <button class="btn btn-danger"><fmt:message key="button.getOrders"/></button>
                     </form>

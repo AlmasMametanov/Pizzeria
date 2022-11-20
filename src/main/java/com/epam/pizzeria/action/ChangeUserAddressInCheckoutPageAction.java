@@ -10,8 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-import static com.epam.pizzeria.action.ActionConstants.CHECKOUT_ORDER_ACTION;
-import static com.epam.pizzeria.action.ActionConstants.PAGE_NOT_FOUND_ACTION;
+import static com.epam.pizzeria.action.ActionConstants.*;
 import static com.epam.pizzeria.util.constants.ParameterNamesConstants.*;
 
 public class ChangeUserAddressInCheckoutPageAction implements Action {
@@ -22,7 +21,7 @@ public class ChangeUserAddressInCheckoutPageAction implements Action {
         HttpSession httpSession = request.getSession(true);
         User user = (User) httpSession.getAttribute(USER);
         if (user != null) {
-            String address = request.getParameter("address");
+            String address = request.getParameter(ADDRESS);
             user.setAddress(address);
             userDAO.updateUserAddress(user);
             actionFactory.getAction(CHECKOUT_ORDER_ACTION).execute(request, response);

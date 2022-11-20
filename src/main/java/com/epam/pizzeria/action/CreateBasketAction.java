@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.epam.pizzeria.action.ActionConstants.PAGE_NOT_FOUND_ACTION;
+import static com.epam.pizzeria.action.ActionConstants.*;
 import static com.epam.pizzeria.util.constants.PageNameConstants.*;
 import static com.epam.pizzeria.util.constants.ParameterNamesConstants.*;
 
@@ -58,7 +58,7 @@ public class CreateBasketAction implements Action {
     }
 
     private void ifProductIsPizza(HttpServletRequest request, User user, Long productId) {
-        Long productSizeId = Long.parseLong(request.getParameter("productSizeId"));
+        Long productSizeId = Long.parseLong(request.getParameter(PRODUCT_SIZE_ID));
         List<Basket> basketListFromDB = basketDAO.getProductsIfProductIsPizza(user.getId(), productId, productSizeId);
         List<Long> ingredientIdList = ifIngredientsSelected(request);
         if (basketListFromDB.isEmpty()) {
@@ -78,9 +78,9 @@ public class CreateBasketAction implements Action {
     }
 
     private List<Long> ifIngredientsSelected(HttpServletRequest request) {
-        String isIngredientsSelected = request.getParameter("selectedIngredientId");
+        String isIngredientsSelected = request.getParameter(SELECTED_INGREDIENT_ID);
         if (isIngredientsSelected != null && !isIngredientsSelected.isEmpty()) {
-            List<String> stringIngredientIdList = Arrays.asList(request.getParameterValues("selectedIngredientId"));
+            List<String> stringIngredientIdList = Arrays.asList(request.getParameterValues(SELECTED_INGREDIENT_ID));
             return stringIngredientIdList.stream().map(Long::parseLong).collect(Collectors.toList());
         }
         return null;

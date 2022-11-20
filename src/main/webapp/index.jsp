@@ -3,8 +3,8 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <html>
-<body>
-<jsp:include page="header.jsp"/>
-<jsp:include page="allProductsOfCategories.jsp"/>
-</body>
+    <body>
+        <jsp:include page="header.jsp"/>
+        <jsp:include page="allProductsOfCategories.jsp"/>
+    </body>
 </html>

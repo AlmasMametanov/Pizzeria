@@ -12,9 +12,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
-import static com.epam.pizzeria.action.ActionConstants.GET_BASKET_ACTION;
-import static com.epam.pizzeria.action.ActionConstants.PAGE_NOT_FOUND_ACTION;
-import static com.epam.pizzeria.util.constants.PageNameConstants.*;
+import static com.epam.pizzeria.action.ActionConstants.*;
 import static com.epam.pizzeria.util.constants.ParameterNamesConstants.*;
 
 public class ChangeProductCountInBasketAction implements Action {
@@ -25,11 +23,11 @@ public class ChangeProductCountInBasketAction implements Action {
         HttpSession httpSession = request.getSession(true);
         User user = (User) httpSession.getAttribute(USER);
         if (user != null) {
-            List<Basket> baskets = (List<Basket>) httpSession.getAttribute("basketsByUser");
-            Long basketId = Long.parseLong(request.getParameter("basketId"));
-            Integer totalPrice = (Integer) httpSession.getAttribute("totalPrice");
-            Integer basketLoopIndex = Integer.parseInt(request.getParameter("basketLoopIndex"));
-            Integer newProductCount = Integer.parseInt(request.getParameter("newProductCount"));
+            List<Basket> baskets = (List<Basket>) httpSession.getAttribute(BASKETS_BY_USER);
+            Long basketId = Long.parseLong(request.getParameter(BASKET_ID));
+            Integer totalPrice = (Integer) httpSession.getAttribute(TOTAL_PRICE);
+            Integer basketLoopIndex = Integer.parseInt(request.getParameter(BASKET_LOOP_INDEX));
+            Integer newProductCount = Integer.parseInt(request.getParameter(NEW_PRODUCT_COUNT));
             if (!baskets.get(basketLoopIndex).getCount().equals(newProductCount)) {
                 Integer priceOfOneProduct = baskets.get(basketLoopIndex).getProduct().getPrice() / baskets.get(basketLoopIndex).getCount();
                 Integer newPrice = priceOfOneProduct * newProductCount;
@@ -39,8 +37,8 @@ public class ChangeProductCountInBasketAction implements Action {
                 baskets.get(basketLoopIndex).setCount(newProductCount);
                 basketDAO.updateProductCountInBasket(newProductCount, basketId);
             }
-            httpSession.setAttribute("basketsByUser", baskets);
-            httpSession.setAttribute("totalPrice", totalPrice);
+            httpSession.setAttribute(BASKETS_BY_USER, baskets);
+            httpSession.setAttribute(TOTAL_PRICE, totalPrice);
             actionFactory.getAction(GET_BASKET_ACTION).execute(request, response);
         } else {
             response.sendRedirect(PAGE_NOT_FOUND_ACTION);

@@ -3,7 +3,6 @@ package com.epam.pizzeria.database.dao.impl;
 import com.epam.pizzeria.database.connection.ConnectionPool;
 import com.epam.pizzeria.database.dao.interfaces.OrderIngredientDetailDAO;
 import com.epam.pizzeria.entity.AdditionalIngredient;
-import com.epam.pizzeria.entity.OrderDetail;
 import com.epam.pizzeria.entity.OrderIngredientDetail;
 import com.epam.pizzeria.entity.ProductSizeIngredientDetail;
 import org.apache.logging.log4j.LogManager;

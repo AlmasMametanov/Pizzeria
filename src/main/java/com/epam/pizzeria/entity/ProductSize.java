@@ -8,6 +8,7 @@ public class ProductSize implements Serializable {
     private String name;
     private String size;
     private ProductSizeDetail productSizeDetail;
+    private ProductSizeIngredientDetail productSizeIngredientDetail;
 
     public Long getId() {
         return id;
@@ -41,6 +42,14 @@ public class ProductSize implements Serializable {
         this.productSizeDetail = productSizeDetail;
     }
 
+    public ProductSizeIngredientDetail getProductSizeIngredientDetail() {
+        return productSizeIngredientDetail;
+    }
+
+    public void setProductSizeIngredientDetail(ProductSizeIngredientDetail productSizeIngredientDetail) {
+        this.productSizeIngredientDetail = productSizeIngredientDetail;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -49,12 +58,13 @@ public class ProductSize implements Serializable {
         return Objects.equals(id, productSize.id) &&
                 Objects.equals(name, productSize.name) &&
                 Objects.equals(size, productSize.size) &&
-                Objects.equals(productSizeDetail, productSize.productSizeDetail);
+                Objects.equals(productSizeDetail, productSize.productSizeDetail) &&
+                Objects.equals(productSizeIngredientDetail, productSize.productSizeIngredientDetail);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, size, productSizeDetail);
+        return Objects.hash(id, name, size, productSizeDetail, productSizeIngredientDetail);
     }
 
     @Override
@@ -64,6 +74,7 @@ public class ProductSize implements Serializable {
                 ", name='" + name + '\'' +
                 ", size='" + size + '\'' +
                 ", productSizeDetail='" + productSizeDetail + '\'' +
+                ", productSizeIngredientDetail='" + productSizeIngredientDetail + '\'' +
                 '}';
     }
 }
