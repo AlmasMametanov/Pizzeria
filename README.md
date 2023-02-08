@@ -22,6 +22,7 @@
 ## Technologies
 * JavaEE: Servlet, JSP, JSTL
 * JDBC
+* Bootstrap 5
 * Log4j2
 * Java 8
 * MySQL
