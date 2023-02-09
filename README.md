@@ -36,16 +36,15 @@ Click 'clone'.
 2. Run MySQL 8.0 Command Line Client, copy/paste the scripts from /db/db.sql 
 and execute the code.
 3. Create .env file with 'db.password=' field in the src/main/resources folder.
-4. Connect the Apache Tomcat server to start the project. 
+4. If you created a database from point 2 under a different name,
+   then in the ConnectionPool.properties file in the src/main/resources folder,
+   you need to correct the 'db.url' under the new name.
+5. Connect the Apache Tomcat server to start the project. 
 Click on the top 'Run' -> 'Edit Configurations'. Next, in the window that opens, in the upper left corner, 
 click '+', select 'Tomcat Server' -> 'Local'. In the window that appears in the 'Application Server', 
 select 'Tomcat 9.0.63', then specify 'JRE 1.8'. Next select 'Deployment', press '+', press 'Artifact', 
 and select 'Pizzeria:war exploded'. Delete the 'Application context' line. Then click 'Apply' and 'OK'.
-5. Now we connect the database. To do this, in the right part of the window, click 'Database', 
+6. Now we connect the database. To do this, in the right part of the window, click 'Database', 
 then '+' -> 'Data Source' -> 'MySQL'. In the window that appears, 'Database' = 'pizzeria', fill in 'User' and 'Password'. 
 Next, click 'Test Connection'. Click 'OK'.
-6. If you created a database from point 2 under a different name 
-and in point 4 gave a different name in the 'Database' field, 
-then in the ConnectionPool.properties file in the src/main/resources folder, 
-you need to correct the 'db.url' under the new name.
 7. You can Run the project.
