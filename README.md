@@ -33,7 +33,7 @@
 select 'Git', then paste the HTTPS address copied from the project on Github into the URL. 
 (here is my address: https://github.com/AlmasMametanov/Pizzeria.git). 
 Click 'clone'.
-2. Run MySQL Command Line Client, copy/paste the scripts from /db/db.sql 
+2. Run MySQL 8.0 Command Line Client, copy/paste the scripts from /db/db.sql 
 and execute the code.
 3. Connect the Apache Tomcat server to start the project. 
 Click on the top 'Run' -> 'Edit Configurations'. Next, in the window that opens, in the upper left corner, 
@@ -47,4 +47,4 @@ Next, click 'Test Connection'. Click 'OK'.
 and in point 4 gave a different name in the 'Database' field, 
 then in the ConnectionPool.properties file in the src/main/resources folder, 
 you need to correct the 'db.url' under the new name.
-6. You can start the project.
+6. You can Run the project.
