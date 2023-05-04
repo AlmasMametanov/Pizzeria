@@ -1,4 +1,5 @@
 # Pizzeria
+Multilingual project written using Java Servlets. Where functions for ordering food are available, such as adding ingredients to pizza, changing your basket, ordering them, etc.
 ## Guest:
 * registration
 * login
